@@ -1,0 +1,17 @@
+{
+  "appId": "vn.itclub.checkin",
+  "name": "Checkin",
+  "displayName": "ITC Checkin",
+  "client": {
+    "ios": {
+      "installMode": "NORMAL",
+      "deploymentTarget": 1
+    },
+    "android": {
+      "installMode": "NORMAL",
+      "deploymentTarget": 1
+    }
+  },
+  "uploadToken": "",
+  "configuration_version": 1
+}
