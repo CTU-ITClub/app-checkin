@@ -12,42 +12,50 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Load Google Credentials
+        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > config.json
       - name: Get source tree
         run: ls -la
-      - name: Install npm dependencies
-        run: npm install --legacy-peer-deps
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-caches-
-      - name: Make Gradlew Executable
-        run: cd android && chmod +x ./gradlew
-      - name: Build all artifacts
-        run: cd android && ./gradlew assembleRelease --no-daemon
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Signed App Bundle
-          path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-      - name: Distribute app via Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
-          groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
-          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-      - name: Create latest release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+      - name: Read config
+        run: cat ./config.json | json
+      - name: Export config
+        run: export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)"/config.json"
+      - name: Echo env and read it
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS && cat $GOOGLE_APPLICATION_CREDENTIALS | json
+#      - name: Install npm dependencies
+#        run: npm install --legacy-peer-deps
+#      - name: Cache Gradle Wrapper
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+#      - name: Cache Gradle Dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.gradle/caches
+#          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+#          restore-keys: ${{ runner.os }}-gradle-caches-
+#      - name: Make Gradlew Executable
+#        run: cd android && chmod +x ./gradlew
+#      - name: Build all artifacts
+#        run: cd android && ./gradlew assembleRelease --no-daemon
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Signed App Bundle
+#          path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+#      - name: Distribute app via Firebase App Distribution
+#        uses: wzieba/Firebase-Distribution-Github-Action@v1
+#        with:
+#          appId: ${{secrets.FIREBASE_APP_ID}}
+#          token: ${{secrets.FIREBASE_TOKEN}}
+#          groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
+#          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+#      - name: Create latest release
+#        uses: "marvinpinto/action-automatic-releases@latest"
+#        with:
+#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#          automatic_release_tag: "latest"
+#          prerelease: true
+#          title: "Development Build"
+#          files: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
