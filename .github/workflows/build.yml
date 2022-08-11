@@ -47,7 +47,7 @@ jobs:
 #          token: ${{secrets.FIREBASE_TOKEN}}
           groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
           file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-          serviceCredentialsFile: ${{ GOOGLE_APPLICATION_CREDENTIALS }}
+#          serviceCredentialsFile: ${{ GOOGLE_APPLICATION_CREDENTIALS }}
       - name: Create latest release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
