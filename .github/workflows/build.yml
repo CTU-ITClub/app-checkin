@@ -19,9 +19,11 @@ jobs:
       - name: Read config
         run: cat ./config.json
       - name: Export config
-        run: export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)"/config.json"
-      - name: Echo env and read it
-        run: echo $GOOGLE_APPLICATION_CREDENTIALS && cat $GOOGLE_APPLICATION_CREDENTIALS
+        run: export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/config.json"
+      - name: Echo env
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS
+      - name: Read Env
+        run: cat $GOOGLE_APPLICATION_CREDENTIALS
 #      - name: Install npm dependencies
 #        run: npm install --legacy-peer-deps
 #      - name: Cache Gradle Wrapper
