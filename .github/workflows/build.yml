@@ -13,7 +13,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Load Google Credentials
-        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > config.json
+        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > config.json
       - name: Get source tree
         run: ls -la
       - name: Read config
