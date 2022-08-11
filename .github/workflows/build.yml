@@ -16,6 +16,8 @@ jobs:
         run: ls -la
       - name: Load Google Credentials
         run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > config.json
+      - name: Export env
+        run: export GOOGLE_APPLICATION_CREDENTIALS="./config.json"
       - name: Install npm dependencies
         run: npm install --legacy-peer-deps
       - name: Cache Gradle Wrapper
@@ -45,7 +47,7 @@ jobs:
 #          token: ${{secrets.FIREBASE_TOKEN}}
           groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
           file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-          serviceCredentialsFile: "./config.json"
+          serviceCredentialsFile: ${{ GOOGLE_APPLICATION_CREDENTIALS }}
       - name: Create latest release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
