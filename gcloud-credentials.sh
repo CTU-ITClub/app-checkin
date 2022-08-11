@@ -2,7 +2,3 @@
 echo "$1" > config.json
 
 export GOOGLE_APPLICATION_CREDENTIALS="./config.json"
-
-echo "$GOOGLE_APPLICATION_CREDENTIALS"
-
-cat $GOOGLE_APPLICATION_CREDENTIALS
