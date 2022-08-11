@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > config.json
+echo "$1" > config.json
 ls -la
 cat ./config.json
 export GOOGLE_APPLICATION_CREDENTIALS="$(pwd)/config.json"

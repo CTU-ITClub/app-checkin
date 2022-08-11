@@ -13,7 +13,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Load Google Credentials
-        run: chmod +x ./gcloud-credentials.sh && ./gcloud-credentials.sh
+        run: chmod +x ./gcloud-credentials.sh && ./gcloud-credentials.sh "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
 #      - name: Get source tree
 #        run: ls -la
 #      - name: Install npm dependencies
