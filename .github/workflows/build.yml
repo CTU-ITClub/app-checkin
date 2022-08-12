@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Get source tree
         run: ls -la
-#      - name: Load Google Credentials
-#        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}" > config.json
-#      - name: Export env
-#        run: export GOOGLE_APPLICATION_CREDENTIALS="./config.json"
+      #      - name: Load Google Credentials
+      #        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}" > config.json
+      #      - name: Export env
+      #        run: export GOOGLE_APPLICATION_CREDENTIALS="./config.json"
       - name: Install npm dependencies
         run: npm install --legacy-peer-deps
       - name: Cache Gradle Wrapper
@@ -40,19 +40,28 @@ jobs:
         with:
           name: Signed App Bundle
           path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+      - name: Decode AppDistribution ServiceAccount to JSON file
+        id: decode-appdistribution-serviceaccount
+        uses: timheuer/base64-to-file@master
+        with:
+          fileName: 'service-account.json'
+          fileDir: './app_distribution/'
+          encodedString: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
       - name: Distribute app via Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
           groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
           file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-#          serviceCredentialsFile: ${{ GOOGLE_APPLICATION_CREDENTIALS }}
+          serviceCredentialsFile: ${{ steps.decode-appdistribution-serviceaccount.outputs.filePath }}
+      - name: Get current package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.2.3
       - name: Create latest release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
+          automatic_release_tag: "${{ steps.package-version.outputs.current-version}}"
+          prerelease: false
           title: "Development Build"
           files: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
