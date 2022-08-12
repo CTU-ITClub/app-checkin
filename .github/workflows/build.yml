@@ -13,51 +13,52 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Get source tree
-        run: ls -la
-
-      - name: Install npm dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-caches-
-
-      - name: Make Gradlew Executable
-        run: cd android && chmod +x ./gradlew
-
-      - name: Build all artifacts
-        run: cd android && ./gradlew assembleRelease --no-daemon
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Signed App Bundle
-          path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+#      - name: Get source tree
+#        run: ls -la
+#
+#      - name: Install npm dependencies
+#        run: npm install --legacy-peer-deps
+#
+#      - name: Cache Gradle Wrapper
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+#
+#      - name: Cache Gradle Dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.gradle/caches
+#          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+#          restore-keys: ${{ runner.os }}-gradle-caches-
+#
+#      - name: Make Gradlew Executable
+#        run: cd android && chmod +x ./gradlew
+#
+#      - name: Build all artifacts
+#        run: cd android && ./gradlew assembleRelease --no-daemon
 
       - name: Decode AppDistribution ServiceAccount to JSON file
         uses: davidSchuppa/base64Secret-toFile-action@v1
         with:
           secret: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
           filename: credential_file.json
-          destination-path: $GITHUB_WORKSPACE/Firebase-Distribution-Github-Action/
+          destination-path: ./Firebase-Distribution-Github-Action/
 
       - name: Distribute app via Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
-          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-          serviceCredentialsFile: Firebase-Distribution-Github-Action/credential_file.json
+#          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+          file: "https://github.com/CTU-ITClub/app-checkin/suites/7786561210/artifacts/327991274"
+          serviceCredentialsFile: ./Firebase-Distribution-Github-Action/credential_file.json
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Signed App Bundle
+          path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
 
       - name: Get current package version
         id: package-version
