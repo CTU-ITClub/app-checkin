@@ -49,7 +49,7 @@ jobs:
         with:
           secret: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
           filename: credential_file.json
-          destination-path: ${{ GITHUB_WORKSPACE }}/Firebase-Distribution-Github-Action/
+          destination-path: $GITHUB_WORKSPACE/Firebase-Distribution-Github-Action/
 
       - name: Distribute app via Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -57,7 +57,7 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
           file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-          serviceCredentialsFile: ${{ GITHUB_WORKSPACE }}/Firebase-Distribution-Github-Action/credential_file.json
+          serviceCredentialsFile: Firebase-Distribution-Github-Action/credential_file.json
 
       - name: Get current package version
         id: package-version
