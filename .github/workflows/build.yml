@@ -45,12 +45,19 @@ jobs:
           path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
 
       - name: Decode AppDistribution ServiceAccount to JSON file
-        id: decode-appdistribution-serviceaccount
-        uses: timheuer/base64-to-file@master
+        uses: davidSchuppa/base64Secret-toFile-action@v1
         with:
-          fileName: 'service-account.json'
-          fileDir: './'
-          encodedString: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
+          secret: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
+          filename: credential_file.json
+          destination-path: ${{ GITHUB_WORKSPACE }}/Firebase-Distribution-Github-Action/
+
+      - name: Distribute app via Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
+          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+          serviceCredentialsFile: ${{ GITHUB_WORKSPACE }}/Firebase-Distribution-Github-Action/credential_file.json
 
       - name: Get current package version
         id: package-version
@@ -64,11 +71,3 @@ jobs:
           prerelease: false
           title: "Development build verion: v${{ steps.package-version.outputs.current-version}}"
           files: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-
-      - name: Distribute app via Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
-          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-          serviceCredentialsFile: ${{ steps.decode-appdistribution-serviceaccount.outputs.filePath }}
