@@ -49,7 +49,7 @@ jobs:
 #        uses: davidSchuppa/base64Secret-toFile-action@v1
 #        with:
 #          secret: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
-#          filename: credential_file.json
+#          filename: credentials.json
 #          destination-path: ./
 
       - name: Distribute app via Firebase App Distribution
@@ -59,7 +59,7 @@ jobs:
           groups: ${{ secrets.FIREBASE_TESTER_GROUP }}
 #          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
           file: "https://github.com/CTU-ITClub/app-checkin/suites/7786561210/artifacts/327991274"
-          serviceCredentialsFile: ./credential_file.json
+          serviceCredentialsFile: ./credentials.json
 #
 #      - name: Upload Artifact
 #        uses: actions/upload-artifact@v2
