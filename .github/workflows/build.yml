@@ -38,12 +38,19 @@ jobs:
 #      - name: Build all artifacts
 #        run: cd android && ./gradlew assembleRelease --no-daemon
 
-      - name: Decode AppDistribution ServiceAccount to JSON file
-        uses: davidSchuppa/base64Secret-toFile-action@v1
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
         with:
-          secret: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
-          filename: credential_file.json
-          destination-path: ./
+          name: "credentials.json"
+          json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
+
+#      - name: Decode AppDistribution ServiceAccount to JSON file
+#        uses: davidSchuppa/base64Secret-toFile-action@v1
+#        with:
+#          secret: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONFIG }}
+#          filename: credential_file.json
+#          destination-path: ./
 
       - name: Distribute app via Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -53,22 +60,22 @@ jobs:
 #          file: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
           file: "https://github.com/CTU-ITClub/app-checkin/suites/7786561210/artifacts/327991274"
           serviceCredentialsFile: ./credential_file.json
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Signed App Bundle
-          path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
-
-      - name: Get current package version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.2.3
-
-      - name: Create latest release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ steps.package-version.outputs.current-version}}"
-          prerelease: false
-          title: "Development build verion: v${{ steps.package-version.outputs.current-version}}"
-          files: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+#
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Signed App Bundle
+#          path: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
+#
+#      - name: Get current package version
+#        id: package-version
+#        uses: martinbeentjes/npm-get-version-action@v1.2.3
+#
+#      - name: Create latest release
+#        uses: "marvinpinto/action-automatic-releases@latest"
+#        with:
+#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#          automatic_release_tag: "${{ steps.package-version.outputs.current-version}}"
+#          prerelease: false
+#          title: "Development build verion: v${{ steps.package-version.outputs.current-version}}"
+#          files: ${{ secrets.REACT_NATIVE_ANDROID_APP_PATH }}
