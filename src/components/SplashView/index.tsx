@@ -9,7 +9,7 @@ const SplashView = (props: any) => {
     return (
         <Backdrop color={backgroundColor}>
             <StatusBar backgroundColor={backgroundColor} hidden={false} />
-            <Image source={require('../../images/circle-itclub-logo.png')} style={styles.image}/>
+            <Image source={require('../../images/circle-itclub-logo-v2.png')} style={styles.image}/>
             <Text style={{...styles.text, color: textColor}}>{getApplicationName()}</Text>
         </Backdrop>
     );

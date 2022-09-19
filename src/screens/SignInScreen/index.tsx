@@ -96,7 +96,7 @@ const SignInScreen = (props: { navigation: any }) => {
 				</Backdrop>
             }
             <View style={{...styles.container, backgroundColor: '#FFF'}}>
-                <Image source={require('../../images/circle-itclub-logo.png')} style={styles.logo}/>
+                <Image source={require('../../images/circle-itclub-logo-v2.png')} style={styles.logo}/>
 
                 <TouchableButton
                     title="Đăng nhập bằng Google"
